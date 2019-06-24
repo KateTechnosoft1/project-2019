@@ -18,6 +18,6 @@ public class DarkskyTime {
 
     @Then("^I verify timeline is displayed with two hours incremented$")
     public void verifyTimeline(){
-        System.out.println(homePagehome.getTimeSlots());
+        homePagehome.checkTwoHourIncrement();
     }
 }

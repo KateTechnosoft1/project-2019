@@ -17,6 +17,7 @@ import static stepdefinition.SharedSD.getDriver;
  * Created by mohammadmuntakim
  */
 public class BasePage {
+	JavascriptExecutor jse = (JavascriptExecutor) SharedSD.getDriver();
 
 	// This is the most common wait function used in selenium
 	public static WebElement webAction(final By locator) {
@@ -76,9 +77,9 @@ public class BasePage {
 		return webAction(locator).isEnabled();
 	}
 
-	public void scroll(By locator){
-		WebElement scrollTo = webAction(locator);
-		JavascriptExecutor jse = (JavascriptExecutor) getDriver();
-		jse.executeScript("arguments[0].scrollIntoview();",scrollTo);
+	public void scroll(int x, int y){
+		String xStr = String.valueOf(x);
+		String yStr = String.valueOf(y);
+		jse.executeScript("javascript:window.scrollBy("+xStr+","+yStr+")");
 	}
 }

@@ -17,7 +17,9 @@ public class DarkskyTimeline {
 
     @When("^I expand todays timeline$")
     public void expendTimeline() throws InterruptedException {
-        homePagehome.scrollToElement();
+        homePagehome.scroll(0,650);
+        Thread.sleep(2000);
+        homePagehome.clickOnTodayTemp();
     }
 
     @Then("^I verify lowest and highest temp is displayed correctly$")

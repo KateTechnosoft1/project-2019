@@ -4,12 +4,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.pagefactory.ByChained;
 import org.openqa.selenium.NoSuchElementException;
+import org.testng.Assert;
 import stepdefinition.SharedSD;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,11 +20,13 @@ public class DarkSkyHome extends BasePage{
     private By logo = By.xpath("//a[@class='logo']//img");
     private By currentTemperature = By.xpath("//span[@class='summary swap']");
     private By summaryTemperature = By.xpath("//span[@class='summary-high-low']");
-    private By temperatureRange = By.xpath("//a[@class='day revealed']//span[@class='date__icon__details']");
-    private By lowestTemperature = By.xpath("//a[@class='day revealed']//span[@class='minTemp']");
-    private By highestTemperature = By.xpath("//a[@class='day revealed']//span[@class='maxTemp']");
-    private By lowestCorrect = By.xpath("//div[@class='dayDetails revealed']//span[@class='highTemp swip']/[@class='temp']");
-    private By highestCorrect = By.xpath("//div[@class='dayDetails revealed']//span[@class='lowTemp swap'/[@class='temp']");
+    private By temperatureRange = By.xpath("//body[@class='forecast']/div[@id='week']/a[1]");
+    private By lowestTemperature = By.xpath("//div[@id='week']/a[1]/span[2]/span[1]");
+    private By highestTemperature = By.xpath("//div[@id='week']/div[2]/div[1]//div[1]/span[1]/span[1]");
+    private By lowestCorrect = By.xpath("//div[@id='week']/a[1]/span[2]/span[3]");
+    private By highestCorrect = By.xpath("//div[@id='week']/div[2]//div[2]/div[1]/span[3]/span[1]");
+    private By allTimes = By.xpath("//div[@id='timeline']//div[@class='hours']/*/span");
+    private By now = By.xpath("//div[@id='timeline']//span[@class='hour first']");
     private By hourSpans = By.className("hour");
     private ByChained test = new ByChained(By.className("hour"), By.tagName("span"));
 
@@ -73,7 +74,6 @@ public class DarkSkyHome extends BasePage{
             }
         }
 
-
         ArrayList<String> summary = new ArrayList<>();
         StringBuilder string = new StringBuilder();
         for(WebElement temp : SharedSD.getDriver().findElements(summaryTemperature)){
@@ -101,9 +101,7 @@ public class DarkSkyHome extends BasePage{
         return currentResult;
     }
 
-    public void scrollToElement()throws InterruptedException {
-        scroll(temperatureRange);
-        Thread.sleep(2000);
+    public void clickOnTodayTemp()throws InterruptedException {
         clickOn(temperatureRange);
     }
 
@@ -124,15 +122,67 @@ public class DarkSkyHome extends BasePage{
 
 
 
-    public ArrayList<String> getTimeSlots(){
-        ArrayList<String> timeSlots = new ArrayList<>();
-        for(WebElement item : SharedSD.getDriver().findElements(By.xpath("//span[@class='hour']/span/"))){
-                timeSlots.add(item.getText());
-            }
+    public void checkTwoHourIncrement(){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH");
+        Date date = new Date();
+        calendar.setTime(date);
+        String now = simpleDateFormat.format(calendar.getTime());
+        int nowInt = Integer.parseInt(now);
+        System.out.println(nowInt);
 
-        return timeSlots;
+
+        ArrayList<Integer> actualTimes = new ArrayList<>();
+        List<WebElement> hours = SharedSD.getDriver().findElements(allTimes);
+        for(WebElement hour : hours){
+            if (hour.getText().equals("Now")) {
+                continue;
+            } else {
+                actualTimes.add(deriveMilitaryTime(hour.getText()));
+            }
         }
+        Assert.assertEquals(actualTimes,getExpectedTimes());
+
+
     }
+
+    public int deriveMilitaryTime(String timeString) {
+        int positionOfTimePeriod = timeString.length() - 2;
+        String period = timeString.substring(positionOfTimePeriod);
+        int time = Integer.parseInt(timeString.substring(0, positionOfTimePeriod));
+        if (period.equals("pm")) {
+            time += 12;
+        }
+        return time;
+    }
+
+    public ArrayList<Integer> getExpectedTimes(){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH");
+        Date date = new Date();
+        calendar.setTime(date);
+        String now = simpleDateFormat.format(calendar.getTime());
+        int nowInt = Integer.parseInt(now);
+        System.out.println(nowInt);
+
+        ArrayList<Integer> expectedTimes = new ArrayList<>();
+        int interval = 2;
+        int maxTime = 24;
+        for(int i = 0; i < 11 ; i++){
+            if (nowInt + interval >= maxTime) {
+                expectedTimes.add(nowInt+interval-maxTime);
+            }
+            else {
+                expectedTimes.add(nowInt+interval);
+            }
+            interval+=2;
+        }
+        return expectedTimes;
+    }
+
+
+
+}
 
 
 

@@ -1,9 +1,9 @@
-$(document).ready(function() {var formatter = new CucumberHTML.DOMFormatter($('.cucumber-report'));formatter.uri("darkskytime.feature");
+$(document).ready(function() {var formatter = new CucumberHTML.DOMFormatter($('.cucumber-report'));formatter.uri("hotels.feature");
 formatter.feature({
   "line": 2,
-  "name": "Verify timeline is displayed with 2 hour increments",
+  "name": "Verify user can only view the result by selected property class",
   "description": "",
-  "id": "verify-timeline-is-displayed-with-2-hour-increments",
+  "id": "verify-user-can-only-view-the-result-by-selected-property-class",
   "keyword": "Feature",
   "tags": [
     {
@@ -13,56 +13,68 @@ formatter.feature({
   ]
 });
 formatter.before({
-  "duration": 4190646226,
+  "duration": 4962119306,
   "status": "passed"
 });
 formatter.background({
-  "line": 4,
+  "line": 5,
   "name": "",
   "description": "",
   "type": "background",
   "keyword": "Background"
 });
 formatter.step({
-  "line": 5,
-  "name": "I am on Darksky homepage",
+  "line": 6,
+  "name": "I am on default locations search result screen",
   "keyword": "Given "
 });
 formatter.match({
-  "location": "DarkskyTime.iAmOnDarkSkyHomeTime()"
+  "location": "Hotels.iAmOnAHotelsPage()"
 });
 formatter.result({
-  "duration": 727485195,
+  "duration": 4970971793,
   "status": "passed"
 });
 formatter.scenario({
-  "line": 9,
-  "name": "Verify timeline is displayed with 2 hour increments",
+  "line": 23,
+  "name": "List of all of hotel within 10 miles radius of airport or downtown",
   "description": "",
-  "id": "verify-timeline-is-displayed-with-2-hour-increments;verify-timeline-is-displayed-with-2-hour-increments",
+  "id": "verify-user-can-only-view-the-result-by-selected-property-class;list-of-all-of-hotel-within-10-miles-radius-of-airport-or-downtown",
   "type": "scenario",
   "keyword": "Scenario",
   "tags": [
     {
-      "line": 8,
-      "name": "@darksky-time"
+      "line": 22,
+      "name": "@hotels-radius"
     }
   ]
 });
 formatter.step({
-  "line": 10,
-  "name": "I verify timeline is displayed with two hours incremented",
+  "line": 24,
+  "name": "I verify system displays all hotels within 10 miles radius of airport",
   "keyword": "Then "
 });
+formatter.step({
+  "line": 25,
+  "name": "I verify Hilton Hotel is within radius",
+  "keyword": "And "
+});
 formatter.match({
-  "location": "DarkskyTime.verifyTimeline()"
+  "location": "Hotels.verifyRadius()"
 });
 formatter.result({
-  "duration": 347095362,
+  "duration": 8530127509,
+  "status": "passed"
+});
+formatter.match({
+  "location": "Hotels.verifyHiltonRadius()"
+});
+formatter.result({
+  "duration": 530627751,
   "status": "passed"
 });
 formatter.after({
-  "duration": 170763428,
+  "duration": 334047859,
   "status": "passed"
 });
 });

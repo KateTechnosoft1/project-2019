@@ -2,6 +2,7 @@ package framework.webPages;
 
 import com.google.common.base.Function;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
@@ -10,6 +11,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import stepdefinition.SharedSD;
 
 import java.time.Duration;
+import java.util.List;
 
 import static stepdefinition.SharedSD.getDriver;
 
@@ -18,6 +20,7 @@ import static stepdefinition.SharedSD.getDriver;
  */
 public class BasePage {
 	JavascriptExecutor jse = (JavascriptExecutor) SharedSD.getDriver();
+	Actions actions = new Actions(SharedSD.getDriver());
 
 	// This is the most common wait function used in selenium
 	public static WebElement webAction(final By locator) {
@@ -59,6 +62,10 @@ public class BasePage {
 		return webAction(locator).isSelected();
 	}
 
+	public void hoverOver(By locator) {
+		actions.moveToElement(webAction(locator)).build().perform();
+	}
+
 	public void selectFromDropdown(By locator, String dropdownText) {
 		WebElement month = webAction(locator);
 		Select selectMonth = new Select(month);
@@ -75,6 +82,11 @@ public class BasePage {
 
 	public boolean isElementEnabled(By locator) {
 		return webAction(locator).isEnabled();
+	}
+
+	public List<WebElement> allElements(By locator){
+		List<WebElement> elements= getDriver().findElements(locator);
+		return elements;
 	}
 
 	public void scroll(int x, int y){
